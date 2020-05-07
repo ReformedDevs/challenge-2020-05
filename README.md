@@ -34,7 +34,7 @@ Given a set of nodes (cities) you are to find the shortest path in the least amo
 
 #### Input
 
-* We will be using a subset of the TSPLIB file format for input data.
+* We will be using a subset of the [TSPLIB](http://comopt.ifi.uni-heidelberg.de/software/TSPLIB95/tsp95.pdf) file format for input data.
 * For this challenge, the 'TYPE' will always be TSP, the 'DIMENSION' will be the number of nodes, and the EDGE_WEIGHT_TYPE will always be EUC_2D
 
 ```plaintext
