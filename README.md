@@ -1,6 +1,6 @@
 # The Reformed Devs Monthly Challenge
 
-## Month Year
+## May 2020
 
 ### Background
 
@@ -12,29 +12,65 @@ Birthed out of our Slack org, The Reformed Devs have begun monthly coding challe
 * [July 2019](https://github.com/ReformedDevs/challenge-2019-07)
 * [September 2019](https://github.com/ReformedDevs/challenge-2019-09)
 * [October 2019](https://github.com/ReformedDevs/challenge-2019-10)
-
-#### Future Challenge Ideas
-
-* Boggle Solver
-* Sudoku Generator/Solver
-* Algorithm trainer
-* Next best scrabble move
-* Provide a game API and have solutions play against each other
-* Prisoner puzzle best time
+* [November 2019](https://github.com/ReformedDevs/challenge-2019-11)
 
 ### This Month's Challenge
 
 #### Problem
 
-A description of the problem(s) to be solved. Include an example to be helpful. Explicit is better than implicit.
+With this month's challenge we are beginning a series of truly hard problems. These are classic computer science problems known to be NP (non-deterministic polynomial time) hard.
+
+The first of these is the classic "Travelling Salesman Problem" (TSP) which is simple to describe, but difficult to solve. Given a list of cities and the distances between them, what is the shortest possible route that visits each city exactly once and returns to the origin city?
+
+A brute force approach to this can be very expensive computationally, O(n!). With 60 roads (edges) there are 60! = 8.32 x 10^81 possible routes. That is more than the number of atoms in the universe!
+
+The particular TSP we will be solving is a 'symmetric' TSP. This means that the distance between cities will be the same in both directions.
+
+It isn't necessary to find the optimal soluton, the competition is for an algorithm that finds an approximate solution and scales to larger number of cities. Also, we won't stress your programs with 60 cities. We are however looking for solutions that will scale. We may provide test input of 10 cities, but use 15 or 16 cities in the actual competition.
+
+#### Challenge Details
+
+Given a set of nodes (cities) you are to find the shortest path in the least amount of time. Note: we aren't expecting the optimal path.
+
+#### Input
+
+* We will be using a subset of the TSPLIB file format for input data.
+* For this challenge, the 'TYPE' will always be TSP, the 'DIMENSION' will be the number of nodes, and the EDGE_WEIGHT_TYPE will always be EUC_2D
+
+```plaintext
+NAME : sample
+COMMENT : a sample data set
+TYPE : TSP
+DIMENSION : 5
+EDGE_WEIGHT_TYPE : EUC_2D
+NODE_COORD_SECTION
+1 37.0 63.0
+2 49.0 49.0
+3 52.0 64.0
+4 30.0 26.0
+5 40.0 30.0
+EOF
+```
 
 #### Output
 
-Running your solution should output your info in the following format: `desired, output, items, here`.
+Once your program has finished the game the following will need to be returned to STDOUT:
+
+```plaintext
+Github Name, Program Language, Total Time (in ms), input filename, Notes
+newline separate list of node #s indicated calculated route
+-1  terminate list with -1 to indicate return to origin node
+```
+
+#### Total time
+
+Timer starts _immediately_. In C, this would mean the first line of `main()` would be the initiation of the timer.
 
 #### Scoring
 
-Description of how rank will be determined.
+We are looking for the program that achieves the shortest length in the least amount of time. The lower the sscore the better.
+
+score = sqrt( (resultTime / bestTime)^2 + (resultLength / shortestSolution)^2 )
 
 ### Solution Setup
 
@@ -44,7 +80,7 @@ Your solution directory should include the following:
 
 * `build.sh` file (only if you need to build/compile your solution)
 * `run.sh` file (a shell file that has the command to execute your solution)
-  * **Important**: Make sure your solution can take an input. The letters to handle will be sent as a string in a BASH variable. See example folder for details on how this will work.
+* **Important**: Make sure your solution can take an input. The letters to handle will be sent as a string in a BASH variable. See example folder for details on how this will work.
 * the file(s) needed to build and run your solution.
 
 See the `example` directory for more guidance.
