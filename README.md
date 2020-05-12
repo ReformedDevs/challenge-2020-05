@@ -80,7 +80,7 @@ Your solution directory should include the following:
 
 * `build.sh` file (only if you need to build/compile your solution)
 * `run.sh` file (a shell file that has the command to execute your solution)
-* **Important**: Make sure your solution can take an input. The letters to handle will be sent as a string in a BASH variable. See example folder for details on how this will work.
+* **Important**: Make sure your solution can take an input. The absolute path to the input file will be passed as the first argument to your run.sh file. See example folder for details on how this will work.
 * the file(s) needed to build and run your solution.
 
 See the `example` directory for more guidance.
