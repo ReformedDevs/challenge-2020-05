@@ -18,49 +18,145 @@ Birthed out of our Slack org, The Reformed Devs have begun monthly coding challe
 
 #### Problem
 
-With this month's challenge we are beginning a series of truly hard problems. These are classic computer science problems known to be NP (non-deterministic polynomial time) hard.
+With this month's challenge we are taking on a series of truly hard (NP-Hard) problems.  These are classic computer science problems known to be NP (non-deterministic polynomial time) Hard. More information about computational complexity and NP-Hard can be found on Wikipedia; [Computational Complexity](https://en.wikipedia.org/wiki/Computational_complexity) and [NP-hardness](https://en.wikipedia.org/wiki/NP-hardness).
 
-The first of these is the classic "Travelling Salesman Problem" (TSP) which is simple to describe, but difficult to solve. Given a list of cities and the distances between them, what is the shortest possible route that visits each city exactly once and returns to the origin city?
+The first of these is the classic ["Travelling Salesman Problem" (TSP)](https://en.wikipedia.org/wiki/Travelling_salesman_problem) which is simple to describe, but difficult to solve.  Given a list of cities and the distances between them, what is the shortest possible route that visits each city exactly once and returns to the origin city?
 
 A brute force approach to this can be very expensive computationally, O(n!). With 60 roads (edges) there are 60! = 8.32 x 10^81 possible routes. That is more than the number of atoms in the universe!
 
-The particular TSP we will be solving is a 'symmetric' TSP. This means that the distance between cities will be the same in both directions.
+The particular TSP we will be solving is the 'symmetric' TSP. This means that the distance between cities is the same in both directions.  Therefore the data provided is an 'undirected graph' (symmetric problem would be a directed graph).
 
-It isn't necessary to find the optimal soluton, the competition is for an algorithm that finds an approximate solution and scales to larger number of cities. Also, we won't stress your programs with 60 cities. We are however looking for solutions that will scale. We may provide test input of 10 cities, but use 15 or 16 cities in the actual competition.
+It isn't necessary to find the optimal soluton, the competition is for an algorithm that finds an approximate solution in a reasonable amount of time and scalable to a larger number of input cities.   Also, we may not stress your programs with 60 cities. However, we are looking for solutions that will scale and can find the best approximate solution in the least amount of time.  
 
-#### Challenge Details
+We are providing a couple of small sample input files for development.  When it comes to the competition we will provide a larger 'real-world' problem drawn from the [TSPLIB95](http://comopt.ifi.uni-heidelberg.de/software/TSPLIB95/) predefined data sets.
 
-Given a set of nodes (cities) you are to find the shortest path in the least amount of time. Note: we aren't expecting the optimal path.
+## Challenge details​
 
-#### Input
+Given a set of nodes (cities) you are to find an approximate shortest path in the least amount of time.
 
-* We will be using a subset of the [TSPLIB](http://comopt.ifi.uni-heidelberg.de/software/TSPLIB95/tsp95.pdf) file format for input data.
-* For this challenge, the 'TYPE' will always be TSP, the 'DIMENSION' will be the number of nodes, and the EDGE_WEIGHT_TYPE will always be EUC_2D
+### Input
+
+* We will be using a subset of the [TSPLIB95 file format](http://comopt.ifi.uni-heidelberg.de/software/TSPLIB95/tsp95.pdf) for input data. We are using TSPLIB95 to have available a set of standard Traveling Salesman Problems with known optimal solutions.
+* For this challenge, the 'TYPE' will always be TSP (symmetric Traveling Salesman Problem), the 'DIMENSION' is the number of nodes/cities, and the EDGE_WEIGHT_TYPE will  be EXPLICIT (weight provided) and the EDGE_WEIGHT_FORMAT will be LOWER_DIAG_ROW.
 
 ```plaintext
-NAME : sample
-COMMENT : a sample data set
-TYPE : TSP
-DIMENSION : 5
-EDGE_WEIGHT_TYPE : EUC_2D
-NODE_COORD_SECTION
-1 37.0 63.0
-2 49.0 49.0
-3 52.0 64.0
-4 30.0 26.0
-5 40.0 30.0
+NAME: example.tsp
+TYPE: TSP
+COMMENT: 6 New England capitals
+DIMENSION: 6
+EDGE_WEIGHT_TYPE: EXPLICIT
+EDGE_WEIGHT_FORMAT: LOWER_DIAG_ROW
+EDGE_WEIGHT_SECTION
+0
+229 0
+93 149 0
+115 116 63 0
+65 190 41 95 0
+173 138 152 90 178 0
 EOF
 ```
 
-#### Output
+#### LOWER_DIAG_ROW format
 
-Once your program has finished the game the following will need to be returned to STDOUT:
+The LOWER_DIAG_ROW format provides explicit weights (distances) between any two nodes for a symmetric TSP data set.  Since the weights (distances) are symmetric, only half of the full matrix is required resulting in essentially a jagged array.
+
+The EDGE_WEIGHT_SECTION in the example above is formatted to help visualize the "lower diagonal" data sequence. However, the actual data in the TSP file is only assumed to be whitespace separated integers with a 0 terminating a row of data.  The data you receive could be a vertical or a horizontal list of numbers, all of the following sequences of numbers  represent the same set of edge weight data.
+
+All four of the following EDGE_WEIGHT_SECTION data represent the same jagged array data set.
+
+##### TRIANGLE
 
 ```plaintext
-Github Name, Program Language, Total Time (in ms), input filename, Notes
-newline separate list of node #s indicated calculated route
--1  terminate list with -1 to indicate return to origin node
+EDGE_WEIGHT_SECTION
+0
+229 0
+93 149 0
+115 116 63 0
+65 190 41 95 0
+173 138 152 90 178 0
+EOF
 ```
+
+##### Horizontal
+
+```plaintext
+EDGE_WEIGHT_SECTION
+0 229 0 93 149 0 115 116 63 0 65 190 41 95 0 173 138 152 90 178 0
+EOF
+```
+
+##### Vertical
+
+```plaintext
+EDGE_WEIGHT_SECTION
+0
+229
+0
+93
+149
+0
+115
+116
+63
+0
+65
+190
+41
+95
+0
+173
+138
+152
+90
+178
+0
+EOF
+```
+
+##### Rectangular
+
+```plaintext
+EDGE_WEIGHT_SECTION
+0 229 0 93 149 0 115
+116 63 0 65 190 41 95
+0 173 138 152 90 178 0
+EOF
+```
+
+##### Resulting Jagged Array
+
+|   | 1 | 2 | 3 | 4 | 5 | 6 |
+|:-:|--:|--:|--:|--:|--:|--:|
+| 1 | 0 | | | | | |
+| 2 | 229 | 0 | | | | |
+| 3 | 93 | 149 | 0 | | | |
+| 4 | 115 | 116 | 63 | 0 | | | |
+| 5 | 65 | 190 | 41 | 95 | 0 | |
+| 6 | 173 | 138 | 152 | 90 | 178 | 0 |
+
+#### Output
+
+Once your program has completed the solution the following will need to be returned to STDOUT.
+First a header typical for our challenges with one chqnge, the time will be reported in real # of seconds sss.sssss.  After the header list the sequence of nodes/cities representing your calculated route followed ending with the start city, followed by -1.
+
+Header
+    githubname, language, seconds (to neareest millisecond), real # distance (km), input filename, notes
+
+##### Example output
+
+```plaintext
+githubname, C++, 3.21, 596, example.tsp, notes
+1
+5
+3
+4
+2
+6
+1
+-1
+```
+
+Note: output, like input, can be any whitespace (including newline) separated list of numbers ending with -1 followed by EOF on its own line.
 
 #### Total time
 
@@ -80,7 +176,7 @@ Your solution directory should include the following:
 
 * `build.sh` file (only if you need to build/compile your solution)
 * `run.sh` file (a shell file that has the command to execute your solution)
-* **Important**: Make sure your solution can take an input. The absolute path to the input file will be passed as the first argument to your run.sh file. See example folder for details on how this will work.
+  * **Important**: Make sure your solution can take an input. The input file will be passed as a will be sent as a string in a BASH variable. See example folder for details on how this will work.
 * the file(s) needed to build and run your solution.
 
 See the `example` directory for more guidance.
